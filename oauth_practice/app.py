@@ -9,8 +9,11 @@ from flask_dance.contrib.google import make_google_blueprint, google
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'mysecret'
 
-blueprint = make_google_blueprint(client_id="", client_secret="",
-		offline=True, scope=["profile", "email")
+blueprint = make_google_blueprint(
+	client_id="", # OAuth id
+	client_secret="", # OAuth key
+	offline=True,
+	scope=["profile", "email"])
 app.register_blueprint(blueprint, url_prefix="/login")
 
 
@@ -21,8 +24,12 @@ def index():
 @app.route("/welcome")
 def welcome():
 	# RETURN ERROR INTERNAL SERVER ERROR IF NOT LOGGED IN!!
-	
-	return render_template("welcome.html")
+	if not google.authorized:
+		return render_template(url_for("google.login"))
+	resp = google.get("/oauth2/v2/userinfo")
+	assert resp.ok, resp.text
+	email = resp.json()['email']
+	return render_template('welcome.html', email=email)
 
 
 @app.route("/login/google")
@@ -33,3 +40,5 @@ def login():
 	assert resp.ok, resp.text
 	email = resp.json()['email']
 	return render_template('welcome.html', email=email)
+if __name__ == "__main__":
+	app.run()
