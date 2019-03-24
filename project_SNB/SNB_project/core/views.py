@@ -6,6 +6,6 @@ core = Blueprint("core", __name__)
 def index():
     return render_template("index.html")
 
-@core.route("/info")
-def info():
-    return render_template("info.html")
+@core.route("/about")
+def about():
+    return render_template("about.html")
