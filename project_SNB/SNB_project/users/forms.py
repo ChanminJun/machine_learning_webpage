@@ -1,4 +1,4 @@
-from flask_twf import FlaskForm
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms import ValidationError
@@ -33,7 +33,7 @@ class RegistrationForm(FlaskForm):
 class UpdateUserForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     username = StringField("UserName", validators=[DataRequired()])
-    picture = FileField("Update Profile Picture", validators=[FileAllowed(["jpg", "png"])]
+    picture = FileField("Update Profile Picture", validators=[FileAllowed(["jpg", "png"])])
     submit = SubmitField("Update")
 
     def check_email(self, field):
